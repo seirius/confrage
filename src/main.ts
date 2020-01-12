@@ -4,6 +4,7 @@ import { ServerConfig } from "./config/ServerConfig";
 import { Logger } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { LoggerConfig } from "./config/LoggerConfig";
+import { createConnection } from "typeorm";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -11,11 +12,13 @@ async function bootstrap() {
     });
 
     const options = new DocumentBuilder()
-    .setTitle("Freefolk microservice template")
-    .setDescription("Freefolk microservice template")
+    .setTitle("Configuration storage - confrage")
+    .setDescription("Configuration storage server")
     .setVersion("1.5")
-    .addTag("freefolk")
+    .addTag("confrage")
     .build();
+
+    createConnection();
 
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup("api", app, document);

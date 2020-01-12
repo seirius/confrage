@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column } from "typeorm";
 
 @Entity()
 export class Env {
@@ -6,7 +6,10 @@ export class Env {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column()
+    @Column({
+        unique: true,
+        length: 255,
+    })
     public name: string;
 
 }

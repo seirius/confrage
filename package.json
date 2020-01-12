@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker": "docker build -t confrage .",
-    "mig:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate -n Init"
+    "mig:generate": "tsc && typeorm migration:generate -n Init",
+    "mig:run": "tsc && typeorm migration:run"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,7 @@
   "dependencies": {
     "@nestjs/common": "^6.8.0",
     "@nestjs/core": "^6.8.0",
-    "@nestjs/platform-express": "^6.8.0",
+    "@nestjs/platform-express": "^6.10.14",
     "@nestjs/swagger": "^4.0.9",
     "dotenv": "^8.2.0",
     "env-var": "^5.2.0",

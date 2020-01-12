@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from "typeorm";
 import { Env } from "./env.entity";
-import { never } from "rxjs";
 
 @Entity()
 export class FileData {
@@ -25,5 +24,8 @@ export class FileData {
         length: 255,
     })
     public type: string;
+
+    @Column({length: 510, nullable: false})
+    public filename: string;
 
 }
