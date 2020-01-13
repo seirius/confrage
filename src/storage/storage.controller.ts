@@ -1,6 +1,6 @@
 import { Controller, Post, HttpCode, HttpStatus, UseInterceptors, UploadedFile, Body, Get, Query, Response as nResponse } from "@nestjs/common";
-import { ApiConsumes, ApiResponse } from "@nestjs/swagger";
-import { FileInterceptor, FileFieldsInterceptor } from "@nestjs/platform-express";
+import { ApiConsumes, ApiResponse, ApiQuery } from "@nestjs/swagger";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { StorageSaveFileDateDto } from "./storage.dto";
 import { StorageService } from "./storage.service";
 import { Response } from "express";
@@ -37,20 +37,21 @@ export class StorageController {
             },
         },
     })
+    @ApiQuery({name: "path", required: false})
     public async retrieveFileData(
         @nResponse() response: Response,
-        @Query("env") env: string,
+        @Query("envName") envName: string,
         @Query("filename") filename: string,
         @Query("path") path?: string,
     ) {
-        const data = await this.storageService.getFileData({envName: env, path, filename});
+        const data = await this.storageService.getFileData({envName, path, filename});
         if (data) {
             response.setHeader("Content-disposition", "attachment; filename=" + filename);
             response.setHeader("content-type", "application/octet-stream");
             response.end(data, "binary");
         } else {
             response.status(HttpStatus.NOT_FOUND).json({
-                message: "No file data was found."
+                message: "No file data was found.",
             });
         }
     }

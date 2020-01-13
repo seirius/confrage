@@ -14,7 +14,7 @@ async function bootstrap() {
     const options = new DocumentBuilder()
     .setTitle("Configuration storage - confrage")
     .setDescription("Configuration storage server")
-    .setVersion("1.5")
+    .setVersion("1.0")
     .addTag("confrage")
     .build();
 
