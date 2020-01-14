@@ -30,6 +30,11 @@ services:
             TYPEORM_ENTITIES: '**/*.entity.js'
             TYPEORM_MIGRATIONS_DIR: migration
             TYPEORM_MIGRATIONS: dist/migration/**/*.js
-            STORAGE_DIRECTORY: /Users/waavistudio/Downloads
+            STORAGE_DIRECTORY: ~/Downloads
         ports:
             - 80:3000
+        volumes: 
+            - ./:/usr/src/app
+        entrypoint: npm run start:dev
+        depends_on: 
+            - mysql

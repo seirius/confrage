@@ -2,7 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { IStorageSaveFileDataArgs, IWriteFileDataArgs, IReadFileDataArgs, IGetFileDataArgs } from "./storage.dto";
 import { promises } from "fs";
 import { StorageConfig } from "./../config/StorageConfig";
-import { join } from "path";
+import { join, extname } from "path";
 import { Transaction, TransactionRepository, Repository, getRepository } from "typeorm";
 import { Env } from "./entities/env.entity";
 import { FileData } from "./entities/file-data.entity";
@@ -32,6 +32,10 @@ export class StorageService {
                 filename: originalname,
             },
         });
+        console.log(originalname.contains);
+        console.log(typeof originalname);
+        type = originalname.includes(".") ? extname(originalname).substring(1) : "text";
+        console.log(type);
         if (!fileData) {
             fileData = new FileData();
             fileData.env = env;
@@ -39,6 +43,10 @@ export class StorageService {
             fileData.type = type;
             fileData.filename = originalname;
             fileData = await fileDataRepository.save(fileData);
+        } else {
+            await fileDataRepository.update({id: fileData.id}, {
+                type, path,
+            });
         }
         await this.writeFileData({envName, path, data: buffer, filename: originalname});
     }
