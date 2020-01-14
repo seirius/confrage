@@ -15,3 +15,21 @@ services:
             - '--default-authentication-plugin=mysql_native_password'
             - '--character-set-server=utf8'
             - '--collation-server=utf8_general_ci'
+
+    confrage:
+        build: ./
+        environment: 
+            LOGGER_LEVEL: log,error
+            PORT: 3000
+            TYPEORM_CONNECTION: mysql
+            TYPEORM_HOST: mysql
+            TYPEORM_USERNAME: confrage
+            TYPEORM_PASSWORD: confrage
+            TYPEORM_DATABASE: confrage
+            TYPEORM_PORT: 3306
+            TYPEORM_ENTITIES: '**/*.entity.js'
+            TYPEORM_MIGRATIONS_DIR: migration
+            TYPEORM_MIGRATIONS: dist/migration/**/*.js
+            STORAGE_DIRECTORY: /Users/waavistudio/Downloads
+        ports:
+            - 80:3000
