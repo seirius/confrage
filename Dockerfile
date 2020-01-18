@@ -8,4 +8,8 @@ RUN npm install && npm install -g @nestjs/cli && nest build
 
 EXPOSE 3000/tcp
 
-ENTRYPOINT ["npm", "run", "start:prod"]
+
+FROM build AS local
+COPY --from=jwilder/dockerize /usr/local/bin/dockerize /usr/local/bin
+
+CMD ["npm", "run", "start:prod"]
