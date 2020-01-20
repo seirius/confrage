@@ -10,7 +10,7 @@ export interface IStorageSaveFileDataArgs {
 export class StorageSaveFileDateDto {
     @ApiProperty({
         type: "string",
-        format: "binary"
+        format: "binary",
     })
     data: any;
     @ApiProperty()
@@ -38,4 +38,24 @@ export interface IReadFileDataArgs {
     envName: string;
     path: string;
     filename: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class FileDataListItem {
+    @ApiProperty()
+    path?: string;
+
+    @ApiProperty()
+    filename: string;
+
+    @ApiProperty()
+    envName: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class FileDataList{
+    @ApiProperty({
+        type: [FileDataListItem],
+    })
+    items: FileDataListItem[];
 }

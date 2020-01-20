@@ -1,7 +1,7 @@
 import { Controller, Post, HttpCode, HttpStatus, UseInterceptors, UploadedFile, Body, Get, Query, Response as nResponse } from "@nestjs/common";
 import { ApiConsumes, ApiResponse, ApiQuery } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { StorageSaveFileDateDto } from "./storage.dto";
+import { StorageSaveFileDateDto, FileDataList } from "./storage.dto";
 import { StorageService } from "./storage.service";
 import { Response } from "express";
 
@@ -54,6 +54,28 @@ export class StorageController {
                 message: "No file data was found.",
             });
         }
+    }
+
+    @Get("file-data/list")
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "Youtube list",
+        type: FileDataList,
+    })
+    public async fileDataList(
+        @Query("env") env: string,
+        @Query("filename") filename: string,
+        @Query("path") path: string,
+    ): Promise<FileDataList> {
+        const fileDataList = await this.storageService.listFileData({env, path, filename});
+        return {
+            items: fileDataList.map(({path: itemPath, filename: itemFilename, env: {name: envName}}) => ({
+                path: itemPath,
+                filename: itemFilename,
+                envName,
+            })),
+        };
     }
 
 }

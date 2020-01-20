@@ -3,7 +3,7 @@ import { IStorageSaveFileDataArgs, IWriteFileDataArgs, IReadFileDataArgs, IGetFi
 import { promises } from "fs";
 import { StorageConfig } from "./../config/StorageConfig";
 import { join, extname } from "path";
-import { Transaction, TransactionRepository, Repository, getRepository } from "typeorm";
+import { Transaction, TransactionRepository, Repository, getRepository, Like, FindManyOptions, FindConditions } from "typeorm";
 import { Env } from "./entities/env.entity";
 import { FileData } from "./entities/file-data.entity";
 
@@ -16,7 +16,7 @@ export class StorageService {
     public async storeFileData(
         {data: {buffer, originalname}, envName, path, type}: IStorageSaveFileDataArgs,
         @TransactionRepository(Env) envRepository?: Repository<Env>,
-        @TransactionRepository(FileData) fileDataRepository?: Repository<FileData>, 
+        @TransactionRepository(FileData) fileDataRepository?: Repository<FileData>,
     ): Promise<void> {
         path = path === undefined ? "" : path;
         let env = await envRepository.findOne({where: {name: envName}});
@@ -32,10 +32,7 @@ export class StorageService {
                 filename: originalname,
             },
         });
-        console.log(originalname.contains);
-        console.log(typeof originalname);
         type = originalname.includes(".") ? extname(originalname).substring(1) : "text";
-        console.log(type);
         if (!fileData) {
             fileData = new FileData();
             fileData.env = env;
@@ -83,6 +80,19 @@ export class StorageService {
             this.logger.log(error);
         }
         return data;
+    }
+
+    public async listFileData({env, path, filename}): Promise<FileData[]> {
+        const fileData = await getRepository(FileData).find({
+            where: {
+                env: {
+                    name: env ? Like(env) : undefined,
+                },
+                path: path ? Like(path) : undefined,
+                filename: filename ? Like(filename) : undefined,
+            },
+        });
+        return fileData;
     }
 
 }

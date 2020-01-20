@@ -1,0 +1,41 @@
+{
+  "name": "confrage-cl",
+  "version": "1.0.0",
+  "description": "Configuration storage client",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "linstall": "rm -rf dist && tsc && npm install -g"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seirius/confrage-cl.git"
+  },
+  "keywords": [
+    "configuration",
+    "storage",
+    "client"
+  ],
+  "author": "SeiRiuS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seirius/confrage-cl/issues"
+  },
+  "homepage": "https://github.com/seirius/confrage-cl#readme",
+  "dependencies": {
+    "axios": "^0.19.1",
+    "colors": "^1.4.0",
+    "command-line-args": "^5.1.1",
+    "dotenv": "^8.2.0",
+    "env-var": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/command-line-args": "^5.0.0",
+    "@types/node": "^13.1.6",
+    "form-data": "^3.0.0",
+    "typescript": "^3.7.4"
+  },
+  "bin": {
+    "confrage": "./dist/index.js"
+  }
+}
