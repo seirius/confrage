@@ -63,6 +63,8 @@ export class StorageController {
         description: "Youtube list",
         type: FileDataList,
     })
+    @ApiQuery({name: "filename", required: false})
+    @ApiQuery({name: "path", required: false})
     public async fileDataList(
         @Query("env") env: string,
         @Query("filename") filename: string,

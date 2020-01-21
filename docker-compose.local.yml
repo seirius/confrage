@@ -12,20 +12,21 @@ services:
             - '--character-set-server=utf8'
             - '--collation-server=utf8_general_ci'
 
-    confrage:
-        build:
-            context: ./
-            target: local
-        env_file: ${ENV_CONFRAGE}
-        ports:
-            - ${CONRAGE_OUT_PORT}:3000
-        volumes:
-            - ./:/usr/src/app
-        command: >
-            sh -c "
-                dockerize -wait tcp://mysql:3306 -timeout 60s
-                npm run mig:run &&
-                npm run start:dev
-            "
-        depends_on: 
-            - mysql
+    # confrage:
+    #     build:
+    #         context: ./
+    #         target: local
+    #     env_file: ${ENV_CONFRAGE}
+    #     ports:
+    #         - ${CONRAGE_OUT_PORT}:3000
+    #     # volumes:
+    #         # - ./:/usr/src/app
+    #     command: >
+    #         sh -c "
+    #             dockerize -wait tcp://mysql:3306 -timeout 60s
+    #             npm run build &&
+    #             npm run mig:run &&
+    #             npm run start
+    #         "
+    #     depends_on: 
+    #         - mysql
