@@ -2,12 +2,15 @@ FROM node:12.13.1-alpine AS build
 
 WORKDIR /usr/src/app
 
-COPY ./ ./
+COPY ./package.json ./package-lock.json ./nest-cli.json ./tsconfig.build.json ./tsconfig.json ./tslint.json ./
 
-RUN npm install && npm install -g @nestjs/cli && nest build
+RUN npm install && npm install -g @nestjs/cli
+
+COPY ./src ./migration ./test ./
+
+RUN nest build
 
 EXPOSE 3000/tcp
-
 
 FROM build AS local
 COPY --from=jwilder/dockerize /usr/local/bin/dockerize /usr/local/bin
