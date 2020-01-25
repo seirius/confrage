@@ -2,11 +2,11 @@ FROM node:12.13.1-alpine AS build
 
 WORKDIR /usr/src/app
 
-COPY ./package.json ./package-lock.json ./nest-cli.json ./tsconfig.build.json ./tsconfig.json ./tslint.json ./
+COPY ./package.json ./package-lock.json ./
 
 RUN npm install && npm install -g @nestjs/cli
 
-COPY ./src ./migration ./test ./
+COPY ./src ./migration ./test ./nest-cli.json ./tsconfig.build.json ./tsconfig.json ./tslint.json ./
 
 RUN nest build
 
