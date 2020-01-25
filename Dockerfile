@@ -6,7 +6,10 @@ COPY ./package.json ./package-lock.json ./
 
 RUN npm install && npm install -g @nestjs/cli
 
-COPY ./src ./migration ./test ./nest-cli.json ./tsconfig.build.json ./tsconfig.json ./tslint.json ./
+COPY ./src ./src
+COPY ./migration ./migration
+COPY ./test ./test
+COPY ./nest-cli.json ./tsconfig.build.json ./tsconfig.json ./tslint.json ./
 
 RUN nest build
 
