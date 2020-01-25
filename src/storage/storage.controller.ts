@@ -1,7 +1,7 @@
 import { Controller, Post, HttpCode, HttpStatus, UseInterceptors, UploadedFile, Body, Get, Query, Response as nResponse } from "@nestjs/common";
 import { ApiConsumes, ApiResponse, ApiQuery } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { StorageSaveFileDateDto, FileDataList } from "./storage.dto";
+import { StorageSaveFileDateDto, FileDataList, EnvList } from "./storage.dto";
 import { StorageService } from "./storage.service";
 import { Response } from "express";
 
@@ -56,13 +56,29 @@ export class StorageController {
         }
     }
 
-    @Get("file-data/list")
+    @Get("env/ls")
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK,
-        description: "Youtube list",
+        description: "Env list",
+        type: EnvList,
+    })
+    @ApiQuery({name: "name", required: false})
+    public async envList(
+        @Query("name") name: string,
+    ): Promise<EnvList> {
+        const envList = await this.storageService.listEnvs({name});
+        return {items: envList};
+    }
+
+    @Get("file-data/ls")
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "File data list",
         type: FileDataList,
     })
+    @ApiQuery({name: "env", required: false})
     @ApiQuery({name: "filename", required: false})
     @ApiQuery({name: "path", required: false})
     public async fileDataList(
@@ -72,11 +88,7 @@ export class StorageController {
     ): Promise<FileDataList> {
         const fileDataList = await this.storageService.listFileData({env, path, filename});
         return {
-            items: fileDataList.map(({path: itemPath, filename: itemFilename, env: {name: envName}}) => ({
-                path: itemPath,
-                filename: itemFilename,
-                envName,
-            })),
+            items: fileDataList,
         };
     }
 

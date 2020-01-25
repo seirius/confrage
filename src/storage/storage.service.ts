@@ -3,7 +3,7 @@ import { IStorageSaveFileDataArgs, IWriteFileDataArgs, IReadFileDataArgs, IGetFi
 import { promises } from "fs";
 import { StorageConfig } from "./../config/StorageConfig";
 import { join, extname } from "path";
-import { Transaction, TransactionRepository, Repository, getRepository, Like, FindManyOptions, FindConditions } from "typeorm";
+import { Transaction, TransactionRepository, Repository, getRepository, Like, FindManyOptions, FindConditions, In } from "typeorm";
 import { Env } from "./entities/env.entity";
 import { FileData } from "./entities/file-data.entity";
 
@@ -82,17 +82,36 @@ export class StorageService {
         return data;
     }
 
-    public async listFileData({env, path, filename}): Promise<FileData[]> {
-        const fileData = await getRepository(FileData).find({
-            where: {
-                env: {
-                    name: env ? Like(env) : undefined,
-                },
-                path: path ? Like(path) : undefined,
-                filename: filename ? Like(filename) : undefined,
-            },
-        });
-        return fileData;
+    public async listEnvs({name}: {name: string}): Promise<Env[]> {
+        const where: FindConditions<Env> = {};
+        if (name) {
+            where.name = Like(`%${name}%`);
+        }
+        return getRepository(Env).find({where});
+    }
+
+    public async listFileData({env, path, filename}: {
+        env: string,
+        path: string,
+        filename: string,
+    }): Promise<FileData[]> {
+        const query = getRepository(FileData)
+        .createQueryBuilder("fileData")
+        .leftJoinAndSelect("fileData.env", "env");
+
+        if (path) {
+            query.where("fileData.path like :path", {path: `%${path}%`});
+        }
+
+        if (filename) {
+            query.where("fileData.filename like :filename", {filename: `%${filename}%`});
+        }
+
+        if (env) {
+            query.where("env.name like :env", {env: `%${env}%`});
+        }
+
+        return await query.getMany();
     }
 
 }

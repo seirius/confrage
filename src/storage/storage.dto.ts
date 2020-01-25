@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { FileData } from "./entities/file-data.entity";
 
 export interface IStorageSaveFileDataArgs {
     data: any;
@@ -41,21 +42,42 @@ export interface IReadFileDataArgs {
 }
 
 // tslint:disable-next-line: max-classes-per-file
-export class FileDataListItem {
+export class EnvDto {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    name: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class FileDataDto {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    env?: EnvDto;
+
     @ApiProperty()
     path?: string;
 
     @ApiProperty()
-    filename: string;
+    type?: string;
 
     @ApiProperty()
-    envName: string;
+    filename: string;
 }
 
 // tslint:disable-next-line: max-classes-per-file
-export class FileDataList{
+export class EnvList {
+    @ApiProperty({type: [EnvDto]})
+    items: EnvDto[];
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class FileDataList {
     @ApiProperty({
-        type: [FileDataListItem],
+        type: [FileDataDto],
     })
-    items: FileDataListItem[];
+    items: FileDataDto[];
 }
