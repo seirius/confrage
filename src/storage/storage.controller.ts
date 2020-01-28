@@ -1,7 +1,7 @@
-import { Controller, Post, HttpCode, HttpStatus, UseInterceptors, UploadedFile, Body, Get, Query, Response as nResponse } from "@nestjs/common";
+import { Controller, Post, HttpCode, HttpStatus, UseInterceptors, UploadedFile, Body, Get, Query, Response as nResponse, Delete } from "@nestjs/common";
 import { ApiConsumes, ApiResponse, ApiQuery } from "@nestjs/swagger";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { StorageSaveFileDateDto, FileDataList, EnvList } from "./storage.dto";
+import { StorageSaveFileDateDto, FileDataList, EnvList, DeleteEnvDto, DeleteFileDataDto } from "./storage.dto";
 import { StorageService } from "./storage.service";
 import { Response } from "express";
 
@@ -90,6 +90,33 @@ export class StorageController {
         return {
             items: fileDataList,
         };
+    }
+
+    @Delete("env")
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "Number of items deleted",
+        type: DeleteEnvDto,
+    })
+    public async deleteEnv(@Query("env") name: string): Promise<DeleteEnvDto> {
+        return this.storageService.deleteEnv({name});
+    }
+
+    @Delete("file-data")
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "Number of items deleted",
+        type: DeleteFileDataDto,
+    })
+    @ApiQuery({name: "path", required: false})
+    public async deleteFileData(
+        @Query("env") env: string,
+        @Query("filename") filename: string,
+        @Query("path") path: string = "",
+    ): Promise<DeleteFileDataDto> {
+        return this.storageService.deleteFileData({env, filename, path});
     }
 
 }

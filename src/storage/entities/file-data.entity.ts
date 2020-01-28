@@ -9,6 +9,7 @@ export class FileData {
 
     @ManyToOne(env => Env, env => env.id, {
         cascade: true,
+        onDelete: "CASCADE",
     })
     @JoinColumn()
     public env: Env;

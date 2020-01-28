@@ -1,5 +1,5 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { IStorageSaveFileDataArgs, IWriteFileDataArgs, IReadFileDataArgs, IGetFileDataArgs } from "./storage.dto";
+import { Injectable, Logger, HttpException, HttpStatus } from "@nestjs/common";
+import { IStorageSaveFileDataArgs, IWriteFileDataArgs, IReadFileDataArgs, IGetFileDataArgs, DeleteEnvDto, DeleteFileDataDto } from "./storage.dto";
 import { promises } from "fs";
 import { StorageConfig } from "./../config/StorageConfig";
 import { join, extname } from "path";
@@ -112,6 +112,27 @@ export class StorageService {
         }
 
         return await query.getMany();
+    }
+
+    public async deleteEnv({name}: {name: string}): Promise<DeleteEnvDto> {
+        const deleteResult = await getRepository(Env).delete({name});
+        return {deleted: deleteResult.affected};
+    }
+
+    public async deleteFileData({env, filename, path}: {
+        env: string;
+        filename: string;
+        path: string;
+    }): Promise<DeleteFileDataDto> {
+        const envEntity = await getRepository(Env).findOne({where: {name: env}});
+        if (!envEntity) {
+            throw new HttpException("No environment found with this name", HttpStatus.NOT_FOUND);
+        }
+        const deleteResult = await getRepository(FileData).delete({
+            env: envEntity,
+            filename, path,
+        });
+        return {deleted: deleteResult.affected};
     }
 
 }

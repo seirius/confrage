@@ -81,3 +81,15 @@ export class FileDataList {
     })
     items: FileDataDto[];
 }
+
+// tslint:disable-next-line: max-classes-per-file
+export class DeleteEnvDto {
+    @ApiProperty()
+    deleted: number;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class DeleteFileDataDto {
+    @ApiProperty()
+    deleted: number;
+}

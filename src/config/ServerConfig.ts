@@ -1,4 +1,6 @@
 import * as env from "env-var";
+import { config as envConfig } from "dotenv";
+envConfig();
 
 export class ServerConfig {
     public static ENV_PATH: string;

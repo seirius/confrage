@@ -6,17 +6,16 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { LoggerConfig } from "./config/LoggerConfig";
 import { createConnection } from "typeorm";
 import commandLineArgs from "command-line-args";
-import { config as envConfig } from "dotenv";
+import { join } from "path";
 
 async function bootstrap() {
     const {env} = commandLineArgs([{
         name: "env",
         alias: "e",
         type: String,
-        defaultValue: "./envs/confrage.env",
+        defaultValue: join(process.cwd(), ".env"),
     }]);
     ServerConfig.ENV_PATH = env;
-    envConfig({path: ServerConfig.ENV_PATH});
     const app = await NestFactory.create(AppModule, {
         logger: LoggerConfig.LEVEL as any,
     });
