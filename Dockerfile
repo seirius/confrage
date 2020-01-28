@@ -9,6 +9,7 @@ RUN npm install && npm install -g @nestjs/cli
 COPY ./src ./src
 COPY ./migration ./migration
 COPY ./test ./test
+COPY ./file-storage ./file-storage
 COPY ./nest-cli.json ./tsconfig.build.json ./tsconfig.json ./tslint.json ./
 
 RUN nest build
